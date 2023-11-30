@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: file-system-service
+    numInstances: 1
+    runtime: image
+    image:
+      url: docker.io/huylm/file-system-service:latest
+
+    region: singapore
+    plan: free
+    autoDeploy: false
