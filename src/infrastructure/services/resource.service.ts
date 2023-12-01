@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { HTTP_CODE } from "src/common/constants";
-import { SimpleBadRequestException } from "src/common/exceptions";
-import { RESOURCE_TYPE_ENUM, Resource } from "src/core/entities";
+import { SimpleBadRequestException, SimpleNotFoundException } from "src/common/exceptions";
+import { RESOURCE_TYPE_ENUM } from "src/core/entities";
 import { DOMAIN_REPOSITORY_SYMBOL, IResourceDataRepository, IResourceRepository } from "src/core/repositories";
 import { CreateResourceDto, IResourceService } from "src/core/services";
 
@@ -21,13 +21,17 @@ export class ResourceService implements IResourceService {
 
         // the parent folder of the destination PATH does not exist
         if (!parent) {
-            throw new SimpleBadRequestException(HTTP_CODE.badRequest, `Parent ${path} does not exist`);
+            throw new SimpleNotFoundException(HTTP_CODE.notFound, `Parent '${path}' does not exist`);
+        }
+
+        if (parent.type === RESOURCE_TYPE_ENUM.FILE) {
+            throw new SimpleBadRequestException(HTTP_CODE.badRequest, `Path '${path}' is not a folder`);
         }
 
         // check existing file/folder name
         const oldResource = await this._resourceRepo.findResourceByParentAndName(parent.id, name);
         if (oldResource) {
-            throw new SimpleBadRequestException(HTTP_CODE.badRequest, `'${name}' is existed at path ${path}`);
+            throw new SimpleBadRequestException(HTTP_CODE.badRequest, `'${name}' is existed at path '${path}'`);
         }
 
         // create

@@ -6,3 +6,7 @@ export class CreateResourceBodyDto {
         public data?: string,
     ) {}
 }
+
+export class GetFileContentQueryDto {
+    constructor(public filePath: string) {}
+}

@@ -11,4 +11,8 @@ export class ResourceDataRepository extends GenericRepository<ResourceData> impl
     constructor(@InjectDataSource() _dataSource: DataSource) {
         super(_dataSource.getRepository(ResourceDataSchema));
     }
+
+    async findDataByResourceId(resourceId: number): Promise<ResourceData | null> {
+        return await this._repository.findOneBy({ resourceId });
+    }
 }
