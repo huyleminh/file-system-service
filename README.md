@@ -1,49 +1,44 @@
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# File System Service
 
 ## Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
 ## Running the app
 
+### 1. Create environment file
+
+### 2. Create database
+
+* Please prepare a database with a name that you like. *Ex: interviewdb*
+* PostgreSQL version: 14x
+
+### 3. Run migration
+
+```bash
+# Build the source code first
+npm run build
+
+# Run migration up
+npm run db:migration
+```
+
+### 4. Run app
+
 ```bash
 # development
-$ npm run start
+npm run start
 
 # watch mode
-$ npm run start:dev
+npm run start:dev
 
 # production mode
-$ npm run start:prod
+npm run start:prod
 ```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+* Author: [Huy Le Minh](https://github.com/huyleminh)
+* Linkedin: [huyleminh-dev](https://linkedin.com/in/huyleminh-dev)
