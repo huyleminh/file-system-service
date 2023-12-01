@@ -11,6 +11,24 @@ function getIncomingRequestInfo(request: Request, response: Response) {
     return [ip, method, originalUrl, `HTTP ${httpVersion}`, statusCode, contentLength, userAgent, requestId];
 }
 
+export function sanitizedPathname(pathname: string) {
+    let cleanPath = pathname
+        .trim()
+        .replace(/(^\/+)/, "/")
+        .replace(/(\/+$)/, "/")
+        .replace(/(\/+)/, "/");
+
+    while (cleanPath.startsWith("/root/")) {
+        cleanPath = cleanPath.replace(/^(\/root\/)/, "/");
+    }
+
+    if (cleanPath === "/root" || cleanPath === "/") {
+        return "/";
+    }
+
+    return cleanPath.replace(/^(\/root\/)/, "/");
+}
+
 export const Common = {
     getIncomingRequestInfo,
 };

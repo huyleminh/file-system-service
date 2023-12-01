@@ -5,6 +5,7 @@ import {
     CreateResourceDataTable1701421958686,
     CreateResourceTable1701421451053,
 } from "./migrations";
+import { InsertRootResource1701442794383 } from "./migrations/1701442794383-insert-root-resource";
 import { ResourceDataSchema, ResourceSchema } from "./schemas";
 
 export const dataSourceOptions: DataSourceOptions = {
@@ -21,6 +22,7 @@ export const dataSourceOptions: DataSourceOptions = {
         CreateResourceTable1701421451053,
         CreateResourceDataTable1701421958686,
         AddResourceDataForeignKey1701422112174,
+        InsertRootResource1701442794383,
     ],
 };
 

@@ -1,2 +1,2 @@
-export * from "./resource-data.schema"
-export * from "./resource.schema"
+export * from "./resource-data.schema";
+export * from "./resource.schema";

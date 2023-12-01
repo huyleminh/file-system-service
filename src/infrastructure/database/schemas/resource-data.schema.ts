@@ -3,7 +3,7 @@ import { EntitySchema } from "typeorm";
 
 export const ResourceDataSchema = new EntitySchema<ResourceData>({
     name: "ResourceData",
-    tableName: "resources",
+    tableName: "resource_data",
     target: ResourceData,
     columns: {
         id: { type: Number, generated: true, primary: true },

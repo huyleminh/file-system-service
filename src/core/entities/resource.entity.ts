@@ -8,3 +8,8 @@ export class Resource {
         public createdAt: Date,
     ) {}
 }
+
+export enum RESOURCE_TYPE_ENUM {
+    FILE = "file",
+    FOLDER = "folder",
+}
