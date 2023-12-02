@@ -55,7 +55,7 @@ export class ResourcesController {
             root: mappedItems[0],
             children: mappedItems.slice(1),
         };
-        return result;
+        return new DataResponse(result);
     }
 
     @Delete("multiple")
@@ -65,7 +65,9 @@ export class ResourcesController {
         const { pathList } = query;
         const sanitizedPathList = pathList.map((path) => sanitizedPathname(path));
 
-        const data = await this._resourceService.removeMultipleResourceAsync(new RemoveMultipleResourceDto(sanitizedPathList));
+        const data = await this._resourceService.removeMultipleResourceAsync(
+            new RemoveMultipleResourceDto(sanitizedPathList),
+        );
         return new DataResponse(data);
     }
 }
