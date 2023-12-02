@@ -14,3 +14,7 @@ export class GetFileContentQueryDto {
 export class GetFolderItemsQueryDto {
     constructor(public path: string) {}
 }
+
+export class DeleteMultipleResourceQueryDto {
+    constructor(public pathList: string[]) {}
+}

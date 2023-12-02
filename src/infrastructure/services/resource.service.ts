@@ -3,7 +3,12 @@ import { HTTP_CODE } from "src/common/constants";
 import { SimpleBadRequestException, SimpleNotFoundException } from "src/common/exceptions";
 import { RESOURCE_TYPE_ENUM, Resource } from "src/core/entities";
 import { DOMAIN_REPOSITORY_SYMBOL, IResourceDataRepository, IResourceRepository } from "src/core/repositories";
-import { CreateResourceDto, IResourceService, ListFolderChildrenDto } from "src/core/services";
+import {
+    CreateResourceDto,
+    IResourceService,
+    ListFolderChildrenDto,
+    RemoveMultipleResourceDto,
+} from "src/core/services";
 
 @Injectable()
 export class ResourceService implements IResourceService {
@@ -77,5 +82,48 @@ export class ResourceService implements IResourceService {
         }
 
         return await this._resourceRepo.findChildrenByParent(resource.id);
+    }
+
+    async removeMultipleResourceAsync(dto: RemoveMultipleResourceDto): Promise<string[]> {
+        const { pathList } = dto;
+
+        // deny remove root command
+        if (pathList.includes("/")) {
+            throw new SimpleBadRequestException(HTTP_CODE.badRequest, "Refuse to remove root directory");
+        }
+
+        const result: string[] = [];
+        for (let path of pathList) {
+            const removeResult = await this._removeSingleResourceAsync(path);
+            if (!removeResult.success) {
+                result.push(removeResult.error!);
+            }
+        }
+        return result;
+    }
+
+    private async _removeSingleResourceAsync(path: string): Promise<{ success: boolean; error?: string }> {
+        const resource = await this._resourceRepo.findResourceByPath(path);
+
+        if (!resource) {
+            return { success: false, error: `Path '${path}' does not exist` };
+        }
+
+        const ancestry = await this._resourceRepo.findAncestry(resource.id);
+
+        // remove resource: all sub folders/files and resource data will be auto deleted
+        await this._resourceRepo.deleteRecordById(resource.id);
+
+        // update ancestry size
+        if (ancestry.length > 0) {
+            for (let item of ancestry) {
+                item.size -= resource.size;
+            }
+
+            // create bulk update
+            await this._resourceRepo.updateManyResourceSize(ancestry);
+        }
+
+        return { success: true };
     }
 }

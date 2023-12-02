@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Inject, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Inject, Post, Query } from "@nestjs/common";
 import { CreatedResponse, DataResponse } from "src/application/response";
 import { sanitizedPathname } from "src/common/utils";
 import {
@@ -8,11 +8,18 @@ import {
     IResourceDataService,
     IResourceService,
     ListFolderChildrenDto,
+    RemoveMultipleResourceDto,
 } from "src/core/services";
-import { CreateResourceBodyDto, GetFileContentQueryDto, GetFolderItemsQueryDto } from "./dtos/requests";
+import {
+    CreateResourceBodyDto,
+    DeleteMultipleResourceQueryDto,
+    GetFileContentQueryDto,
+    GetFolderItemsQueryDto,
+} from "./dtos/requests";
 import { CreateResourceValidationPipe } from "./pipes/create-resource.pipe";
 import { GetFileContentValidationPipe } from "./pipes/get-file-content.pipe";
 import { GetFolderItemsValidationPipe } from "./pipes/get-folder-items.pipe";
+import { DeleteMultipleResourceValidationPipe } from "./pipes/delete-multiple-resource.pipe";
 
 @Controller("v1/resources")
 export class ResourcesController {
@@ -49,5 +56,16 @@ export class ResourcesController {
             children: mappedItems.slice(1),
         };
         return result;
+    }
+
+    @Delete("multiple")
+    async deleteMultipleRersource(
+        @Query(new DeleteMultipleResourceValidationPipe()) query: DeleteMultipleResourceQueryDto,
+    ) {
+        const { pathList } = query;
+        const sanitizedPathList = pathList.map((path) => sanitizedPathname(path));
+
+        const data = await this._resourceService.removeMultipleResourceAsync(new RemoveMultipleResourceDto(sanitizedPathList));
+        return new DataResponse(data);
     }
 }

@@ -13,7 +13,12 @@ export class ListFolderChildrenDto {
     constructor(public path: string) {}
 }
 
+export class RemoveMultipleResourceDto {
+    constructor(public pathList: string[]) {}
+}
+
 export interface IResourceService {
     createResourceAsync(dto: CreateResourceDto): Promise<Resource>;
     listFolderChildrenAsync(dto: ListFolderChildrenDto): Promise<Resource[]>;
+    removeMultipleResourceAsync(dto: RemoveMultipleResourceDto): Promise<string[]>;
 }
