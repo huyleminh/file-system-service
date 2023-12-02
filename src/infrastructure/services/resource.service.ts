@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { HTTP_CODE } from "src/common/constants";
 import { SimpleBadRequestException, SimpleNotFoundException } from "src/common/exceptions";
-import { RESOURCE_TYPE_ENUM } from "src/core/entities";
+import { RESOURCE_TYPE_ENUM, Resource } from "src/core/entities";
 import { DOMAIN_REPOSITORY_SYMBOL, IResourceDataRepository, IResourceRepository } from "src/core/repositories";
-import { CreateResourceDto, IResourceService } from "src/core/services";
+import { CreateResourceDto, IResourceService, ListFolderChildrenDto } from "src/core/services";
 
 @Injectable()
 export class ResourceService implements IResourceService {
@@ -16,10 +16,9 @@ export class ResourceService implements IResourceService {
     async createResourceAsync(dto: CreateResourceDto) {
         const { path, name, data } = dto;
 
-        // find resource id by path
         const parent = await this._resourceRepo.findResourceByPath(path);
 
-        // the parent folder of the destination PATH does not exist
+        // the destination PATH does not exist
         if (!parent) {
             throw new SimpleNotFoundException(HTTP_CODE.notFound, `Parent '${path}' does not exist`);
         }
@@ -47,6 +46,36 @@ export class ResourceService implements IResourceService {
             await this._resourceDataRepo.saveRecord({ data, resourceId: resource.id });
         }
 
+        // find all parent of new resource and update their size
+        // ex: find ancestry of 3
+        //  tree: root -> 1 -> 2 -> 3
+        //  result: 2 -> 1 -> root
+        const ancestry = await this._resourceRepo.findAncestry(resource.id);
+
+        if (ancestry.length > 0) {
+            for (let item of ancestry) {
+                item.size += resource.size;
+            }
+
+            // create bulk update
+            await this._resourceRepo.updateManyResourceSize(ancestry);
+        }
+
         return resource;
+    }
+
+    async listFolderChildrenAsync(dto: ListFolderChildrenDto): Promise<Resource[]> {
+        const resource = await this._resourceRepo.findResourceByPath(dto.path);
+
+        // the destination PATH does not exist
+        if (!resource) {
+            throw new SimpleNotFoundException(HTTP_CODE.notFound, `Path '${dto.path}' does not exist`);
+        }
+
+        if (resource.type === RESOURCE_TYPE_ENUM.FILE) {
+            throw new SimpleBadRequestException(HTTP_CODE.badRequest, `Path '${dto.path}' is not a folder`);
+        }
+
+        return await this._resourceRepo.findChildrenByParent(resource.id);
     }
 }

@@ -1,3 +1,5 @@
+import { Resource } from "../entities";
+
 export class CreateResourceDto {
     constructor(
         public path: string,
@@ -7,6 +9,11 @@ export class CreateResourceDto {
     ) {}
 }
 
+export class ListFolderChildrenDto {
+    constructor(public path: string) {}
+}
+
 export interface IResourceService {
-    createResourceAsync(dto: CreateResourceDto): Promise<any>;
+    createResourceAsync(dto: CreateResourceDto): Promise<Resource>;
+    listFolderChildrenAsync(dto: ListFolderChildrenDto): Promise<Resource[]>;
 }

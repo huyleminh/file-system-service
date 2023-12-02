@@ -7,10 +7,12 @@ import {
     GetFileDataDto,
     IResourceDataService,
     IResourceService,
+    ListFolderChildrenDto,
 } from "src/core/services";
-import { CreateResourceBodyDto, GetFileContentQueryDto } from "./dtos/requests";
+import { CreateResourceBodyDto, GetFileContentQueryDto, GetFolderItemsQueryDto } from "./dtos/requests";
 import { CreateResourceValidationPipe } from "./pipes/create-resource.pipe";
 import { GetFileContentValidationPipe } from "./pipes/get-file-content.pipe";
+import { GetFolderItemsValidationPipe } from "./pipes/get-folder-items.pipe";
 
 @Controller("v1/resources")
 export class ResourcesController {
@@ -30,11 +32,22 @@ export class ResourcesController {
 
     @Get("content")
     async getFileContent(@Query(new GetFileContentValidationPipe()) query: GetFileContentQueryDto) {
-        const { filePath } = query;
+        const { path: filePath } = query;
         const content = await this._resourceDataService.getFileDataAsync(
             new GetFileDataDto(sanitizedPathname(filePath)),
         );
 
         return new DataResponse(content);
+    }
+
+    @Get("children")
+    async getFolderItems(@Query(new GetFolderItemsValidationPipe()) query: GetFolderItemsQueryDto) {
+        const items = await this._resourceService.listFolderChildrenAsync(new ListFolderChildrenDto(query.path));
+        const mappedItems = items.map(({ id, createdAt, name, type, size }) => ({ id, createdAt, name, type, size }));
+        const result = {
+            root: mappedItems[0],
+            children: mappedItems.slice(1),
+        };
+        return result;
     }
 }

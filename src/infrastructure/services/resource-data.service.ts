@@ -14,10 +14,9 @@ export class ResourceDataService implements IResourceDataService {
     ) {}
 
     async getFileDataAsync(dto: GetFileDataDto): Promise<{ content: string; type: string }> {
-        // find resource id by path
         const resource = await this._resourceRepo.findResourceByPath(dto.filePath);
 
-        // the parent folder of the destination PATH does not exist
+        // the destination PATH does not exist
         if (!resource) {
             throw new SimpleNotFoundException(HTTP_CODE.notFound, `Path '${dto.filePath}' does not exist`);
         }

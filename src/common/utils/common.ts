@@ -11,8 +11,8 @@ function getIncomingRequestInfo(request: Request, response: Response) {
     return [ip, method, originalUrl, `HTTP ${httpVersion}`, statusCode, contentLength, userAgent, requestId];
 }
 
-export function sanitizedPathname(pathname: string) {
-    let cleanPath = pathname
+export function sanitizedPathname(path: string) {
+    let cleanPath = path
         .trim()
         .replace(/(^\/+)/, "/")
         .replace(/(\/+$)/, "/")

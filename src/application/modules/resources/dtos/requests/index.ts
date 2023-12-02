@@ -8,5 +8,9 @@ export class CreateResourceBodyDto {
 }
 
 export class GetFileContentQueryDto {
-    constructor(public filePath: string) {}
+    constructor(public path: string) {}
+}
+
+export class GetFolderItemsQueryDto {
+    constructor(public path: string) {}
 }

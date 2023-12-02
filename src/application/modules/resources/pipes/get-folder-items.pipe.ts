@@ -1,25 +1,25 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from "@nestjs/common";
-import { GetFileContentQueryDto } from "../dtos/requests";
 import * as Joi from "joi";
 import { RequestValidationException } from "src/common/exceptions";
+import { GetFolderItemsQueryDto } from "../dtos/requests";
 
-const getFileContentSchema = Joi.object<GetFileContentQueryDto>({
+const getFolderItemsSchema = Joi.object<GetFolderItemsQueryDto>({
     path: Joi.string()
         .required()
         .trim()
         .pattern(/^[\/a-zA-Z0-9 _-]+$/)
         .messages({
-            "any.required": "File path cannot be empty",
-            "string.base": "File path cannot be empty",
-            "string.empty": "File path cannot be empty",
-            "string.pattern.base": "Invalid file path syntax",
+            "any.required": "Path cannot be empty",
+            "string.base": "Path cannot be empty",
+            "string.empty": "Path cannot be empty",
+            "string.pattern.base": "Invalid path syntax",
         }),
 }).options({ allowUnknown: true, stripUnknown: true });
 
 @Injectable()
-export class GetFileContentValidationPipe implements PipeTransform<any, GetFileContentQueryDto> {
-    transform(query: any, _metadata: ArgumentMetadata): GetFileContentQueryDto {
-        const result = getFileContentSchema.validate(query, { convert: true });
+export class GetFolderItemsValidationPipe implements PipeTransform<any, GetFolderItemsQueryDto> {
+    transform(query: any, _metadata: ArgumentMetadata): GetFolderItemsQueryDto {
+        const result = getFolderItemsSchema.validate(query, { convert: true });
 
         if (result.error) {
             const {
