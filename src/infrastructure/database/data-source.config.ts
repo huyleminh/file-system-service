@@ -11,11 +11,7 @@ import { ResourceDataSchema, ResourceSchema } from "./schemas";
 
 export const dataSourceOptions: DataSourceOptions = {
     type: "postgres",
-    host: DATABASE_CONFIG.host,
-    port: DATABASE_CONFIG.port,
-    username: DATABASE_CONFIG.username,
-    password: DATABASE_CONFIG.password,
-    database: DATABASE_CONFIG.dbName,
+    url: DATABASE_CONFIG.url,
     poolSize: 10,
     synchronize: false, // disable sync between entity class and db
     entities: [ResourceSchema, ResourceDataSchema],
