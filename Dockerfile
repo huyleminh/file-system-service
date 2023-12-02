@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-# RUN npm install glob rimraf
-
 # Install dependencies
 RUN npm ci
 
