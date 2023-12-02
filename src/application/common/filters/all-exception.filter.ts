@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from "@nestjs/common";
 import { Request, Response } from "express";
+import { Common } from "src/common/utils";
 import { BaseException } from "src/core/exceptions/base.exception";
-import { Common } from "../utils";
 
 /**
  * @description Handling all exceptions

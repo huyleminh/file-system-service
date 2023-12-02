@@ -3,7 +3,7 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./application/common/filters";
 import { LoggingInterceptor, ResponseMappingInterceptor } from "./application/common/interceptors";
-import { WinstonLogger } from "./application/common/utils";
+import { WinstonLogger } from "./common/utils";
 import { APP_CONFIG, CORS_CONFIG } from "./infrastructure/configs";
 
 async function bootstrap() {

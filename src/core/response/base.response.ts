@@ -1,5 +1,10 @@
 export abstract class BaseResponse {
-    constructor(protected _status: number, protected _code: number, protected _message: string, protected _data: any) {}
+    constructor(
+        protected _status: number,
+        protected _code: number,
+        protected _message: string,
+        protected _data: any,
+    ) {}
 
     toJSONResponse() {
         return {
